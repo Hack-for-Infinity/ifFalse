@@ -19,6 +19,10 @@ let bionicActive = false;
 // Required for perfect reversal — we put the original nodes back.
 let bionicSpans = [];
 
+// Sub-Feature 2 — Line Highlighter: bar element and mousemove handler
+let lineHighlightEl = null;
+let mouseMoveHandler = null;
+
 // Sub-Feature 3 — OpenDyslexic font: injected style element for removal
 let fontStyleEl = null;
 
@@ -183,6 +187,56 @@ function removeWordBolding() {
 
 
 // ============================================================
+// SUB-FEATURE 2 — LINE HIGHLIGHTER
+// ============================================================
+// Problem: Eye loses place between lines. Attention hijacked mid-sentence.
+// Solution: Translucent bar follows mouse Y, snaps to 28px grid.
+// Like a physical reading ruler — works on every website on the internet.
+// ============================================================
+
+function applyLineHighlighter() {
+  const bar = document.createElement('div');
+  bar.id = 'neuro-line-highlight';
+
+  bar.style.cssText = `
+    position: fixed !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 28px !important;
+    background: rgba(255, 213, 0, 0.25) !important;
+    border-top: 1px solid rgba(255, 193, 7, 0.3) !important;
+    border-bottom: 1px solid rgba(255, 193, 7, 0.3) !important;
+    pointer-events: none !important;
+    z-index: 999998 !important;
+    transition: top 0.05s ease !important;
+    top: 0px !important;
+  `;
+
+  document.body.appendChild(bar);
+  lineHighlightEl = bar;
+
+  mouseMoveHandler = function(e) {
+    const snappedTop = Math.floor(e.clientY / 28) * 28;
+    bar.style.top = snappedTop + 'px';
+  };
+
+  document.addEventListener('mousemove', mouseMoveHandler);
+}
+
+function removeLineHighlighter() {
+  if (lineHighlightEl?.parentNode) {
+    lineHighlightEl.parentNode.removeChild(lineHighlightEl);
+  }
+  lineHighlightEl = null;
+
+  if (mouseMoveHandler) {
+    document.removeEventListener('mousemove', mouseMoveHandler);
+    mouseMoveHandler = null;
+  }
+}
+
+
+// ============================================================
 // SUB-FEATURE 3 — OPENDYSLEXIC FONT
 // ============================================================
 // Problem: Letters b/d/p/q flip and look identical when rotated.
@@ -225,11 +279,13 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
   if (message.action === 'toggleBionic') {
     if (message.on) {
-      applyOpenDyslexicFont();  // Sub-Feature 3 — font first
-      applyWordBolding();       // Sub-Feature 1 — then bold
+      applyOpenDyslexicFont();  // Sub-Feature 3
+      applyLineHighlighter();   // Sub-Feature 2
+      applyWordBolding();       // Sub-Feature 1
       bionicActive = true;
     } else {
       removeWordBolding();
+      removeLineHighlighter();
       removeOpenDyslexicFont();
       bionicActive = false;
     }
