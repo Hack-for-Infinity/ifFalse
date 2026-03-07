@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeuroRead Summary</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      /* font-family: 'OpenDyslexic', 'Segoe UI', system-ui, sans-serif; */
+      background: #faf8f5;
+      color: #1a1a1a;
+      line-height: 1.8;
+      letter-spacing: 0.05em;
+      word-spacing: 0.1em;
+    }
+    .header {
+      background: linear-gradient(135deg, #3b5bdb, #7048e8);
+      color: white;
+      padding: 24px 32px;
+      box-shadow: 0 2px 8px rgba(59, 91, 219, 0.2);
+    }
+    .header h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+    .header a {
+      color: rgba(255,255,255,0.9);
+      font-size: 14px;
+      text-decoration: underline;
+    }
+    .header a:hover { color: white; }
+    .content {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+    .content h1, .content h2, .content h3 {
+      margin-top: 1.4em;
+      margin-bottom: 0.6em;
+      line-height: 1.4;
+    }
+    .content p { margin-bottom: 2em; margin-top: 0.4em; }
+    .content ul, .content ol { margin-bottom: 1.5em; padding-left: 1.5em; }
+    .content li { margin-bottom: 0.6em; }
+    .content code { background: #eee; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .content pre { background: #eee; padding: 16px; border-radius: 8px; overflow-x: auto; margin-bottom: 1.5em; }
+    .content blockquote { border-left: 4px solid #3b5bdb; padding-left: 16px; margin: 1.5em 0; color: #555; }
+    .error { color: #c00; padding: 24px; }
+    .loading { padding: 48px; text-align: center; color: #888; }
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-logo { font-size: 28px; }
+    .header-auth {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+    .header-auth .profile-name {
+      color: rgba(255,255,255,0.95);
+      font-weight: 600;
+    }
+    .header-auth .auth-btn {
+      padding: 6px 14px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.5);
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .header-auth .auth-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    .header-auth .hidden { display: none !important; }
+    .summary-login.hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-top">
+      <div class="header-brand">
+        <span class="header-logo" aria-hidden="true">🧠</span>
+        <h1>NeuroRead Summary</h1>
+      </div>
+      <div class="header-auth">
+        <span id="summaryProfileName" class="profile-name hidden"></span>
+        <button id="summaryLogoutBtn" class="auth-btn hidden">Log out</button>
+        <button id="summaryLoginBtn" class="auth-btn">Log in</button>
+      </div>
+    </div>
+    <a id="originalUrl" href="#" target="_blank" rel="noopener">View original page</a>
+  </div>
+  <div id="summaryLoginForm" class="summary-login hidden" style="max-width:400px;margin:24px auto;padding:20px;background:#f5f5f5;border-radius:12px;">
+    <h3 style="margin-bottom:12px;font-size:16px;">Log in</h3>
+    <input type="email" id="summaryLoginEmail" placeholder="Email" style="width:100%;padding:10px;margin-bottom:8px;border:1px solid #ddd;border-radius:6px;" />
+    <input type="password" id="summaryLoginPassword" placeholder="Password" style="width:100%;padding:10px;margin-bottom:8px;border:1px solid #ddd;border-radius:6px;" />
+    <button id="summaryLoginSubmit" style="width:100%;padding:10px;background:#3b5bdb;color:white;border:none;border-radius:6px;font-weight:600;cursor:pointer;">Log in</button>
+    <p id="summaryLoginStatus" style="margin-top:8px;font-size:12px;min-height:16px;"></p>
+  </div>
+  <main class="content" id="summaryContent">
+    <div class="loading">Loading summary...</div>
+  </main>
+  <script src="bionic-summary.js"></script>
+  <script src="summary.js"></script>
+</body>
+</html>

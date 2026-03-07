@@ -6,6 +6,31 @@
   <title>NeuroRead</title>
   <style>
 
+    /* ── SCREEN READER ONLY (WCAG 4.1.2) ──────────────────── */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ── REDUCED MOTION (WCAG 2.1 2.3.3) ─────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .main-toggle:hover, .secondary-btn:hover, .focus-toggle:hover {
+        transform: none;
+      }
+    }
+
     /* ── RESET ───────────────────────────────────────────── */
     * {
       box-sizing: border-box;
@@ -15,8 +40,8 @@
 
     /* ── BASE ────────────────────────────────────────────── */
     body {
-      width: 320px;
-      min-height: 140px;
+      width: 340px;
+      min-height: 220px;
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: #f8f7f4;
       padding: 20px;
@@ -44,7 +69,7 @@
 
     .tagline {
       font-size: 12px;
-      color: #888;
+      color: #555;
       margin-bottom: 20px;
       padding-left: 32px;
     }
@@ -80,7 +105,13 @@
       box-shadow: 0 4px 16px rgba(59, 91, 219, 0.35);
     }
 
-    .main-toggle:focus {
+    .main-toggle:focus,
+    .secondary-btn:focus,
+    .focus-toggle:focus,
+    .auth-btn:focus,
+    input:focus,
+    summary:focus,
+    a:focus {
       outline: 3px solid #f59f00;
       outline-offset: 2px;
     }
@@ -127,18 +158,163 @@
       background: rgba(255,255,255,0.2);
       color: white;
     }
+    .focus-toggle { border-color: #0d9488; color: #0d9488; }
+    .focus-toggle:hover { background: #ccfbf1; box-shadow: 0 4px 12px rgba(13, 148, 136, 0.15); }
+    .focus-toggle.active { background: #0d9488; color: white; box-shadow: 0 4px 16px rgba(13, 148, 136, 0.35); }
+    .focus-toggle .toggle-pill { background: rgba(13, 148, 136, 0.1); color: #0d9488; }
+    .focus-toggle.active .toggle-pill { background: rgba(255,255,255,0.2); color: white; }
 
-    /* ── FOOTER ──────────────────────────────────────────── */
-    .footer {
-      text-align: center;
-      font-size: 11px;
-      color: #bbb;
-      margin-top: 4px;
+    /* ── EVALUATION QUESTIONS (collapsible) ───────────────── */
+    .eval-questions {
+      margin-top: 12px;
+      padding: 8px 0;
+      border-top: 1px solid #eee;
+      font-size: 10px;
+      color: #999;
+    }
+    .eval-questions summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: #888;
+    }
+    .eval-questions ol {
+      margin: 8px 0 0 12px;
+      padding: 0;
+      line-height: 1.5;
+    }
+    .eval-questions li {
+      margin-bottom: 4px;
+    }
+    .eval-questions em {
+      color: #3b5bdb;
+      font-style: normal;
+    }
+
+    /* ── SECONDARY BUTTON (Summarize) ──────────────────────── */
+    .secondary-btn {
+      width: 100%;
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      background: #fff;
+      color: #666;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      transition: all 0.2s;
+    }
+    .secondary-btn:hover:not(:disabled) {
+      background: #f0f0f0;
+      border-color: #3b5bdb;
+      color: #3b5bdb;
+    }
+    .secondary-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .secondary-btn.active {
+      border-color: #3b5bdb;
+      color: #3b5bdb;
+      background: #eef2ff;
+    }
+    .btn-icon { font-size: 16px; }
+
+    /* ── AUTH ROW ─────────────────────────────────────────── */
+    .auth-row {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .auth-row.hidden { display: none !important; }
+    .profile-name {
+      font-weight: 600;
+      color: #333;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 140px;
+    }
+    .auth-inline-btn {
+      padding: 6px 12px;
+      background: transparent;
+      border: 1px solid #3b5bdb;
+      color: #3b5bdb;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .auth-inline-btn:hover { background: #eef2ff; }
+    .auth-form-wrap {
+      margin-top: 10px;
+      padding: 12px;
+      background: #f5f5f5;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+    .auth-form-wrap.hidden { display: none !important; }
+    .auth-form-wrap input {
+      width: 100%;
+      padding: 8px 10px;
+      margin-bottom: 6px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+    .auth-btn {
+      width: 100%;
+      padding: 8px;
+      background: #3b5bdb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .auth-btn:hover { background: #2d4ac7; }
+    .auth-switch { margin-top: 8px; font-size: 11px; }
+    .auth-switch a { color: #3b5bdb; }
+    .auth-status { margin-top: 8px; font-size: 11px; min-height: 16px; }
+    .auth-status.error { color: #c00; }
+
+    /* ── SKIP LINK (WCAG 2.4.1) ───────────────────────────── */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 8px;
+      padding: 8px 16px;
+      background: #3b5bdb;
+      color: white;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 8px;
+      z-index: 100;
+      transition: top 0.2s;
+    }
+    .skip-link:focus {
+      top: 8px;
+      outline: 3px solid #f59f00;
+      outline-offset: 2px;
     }
 
   </style>
 </head>
 <body>
+
+  <!-- SKIP LINK (WCAG 2.4.1 Bypass Blocks) ────────────────── -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ARIA LIVE REGION (WCAG 4.1.3 Status Messages) ────────── -->
+  <div id="liveRegion" aria-live="polite" aria-atomic="true" class="sr-only"></div>
 
   <!-- HEADER -->
   <div class="header">
@@ -147,25 +323,83 @@
   </div>
   <p class="tagline">Making the web readable for every brain.</p>
 
+  <!-- MAIN CONTENT (skip target) ───────────────────────────── -->
+  <main id="main-content" role="main">
+
   <!-- MAIN TOGGLE BUTTON -->
   <button
     class="main-toggle"
     id="bionicBtn"
     aria-pressed="false"
-    aria-label="Toggle Bionic Reading"
+    aria-label="Enable Bionic Reading. Bold first half of words to aid focus. Currently off."
   >
     <div class="toggle-left">
       <span class="toggle-icon">✦</span>
       <div class="toggle-text">
         <span class="toggle-title">Enable Bionic Reading</span>
-        <span class="toggle-subtitle">Word Bold Anchoring — first 45% of every word</span>
       </div>
     </div>
     <span class="toggle-pill" id="togglePill">OFF</span>
   </button>
 
-  <!-- FOOTER -->
-  <div class="footer">1 in 5 people needed this.</div>
+  <!-- FOCUS MODE TOGGLE -->
+  <button
+    class="main-toggle focus-toggle"
+    id="focusBtn"
+    aria-pressed="false"
+    aria-label="Enable Focus Mode. Clean reading view. Currently off."
+  >
+    <div class="toggle-left">
+      <span class="toggle-icon">◎</span>
+      <div class="toggle-text">
+        <span class="toggle-title">Focus Mode</span>
+      </div>
+    </div>
+    <span class="toggle-pill" id="focusPill">OFF</span>
+  </button>
+
+  <!-- SUMMARIZE BUTTON -->
+  <button class="secondary-btn" id="summarizeBtn" disabled aria-label="Summarize this page. Log in to enable.">
+    <span class="btn-icon" aria-hidden="true">📄</span>
+    <span id="summarizeLabel">Log in to summarize</span>
+  </button>
+
+  <!-- AUTH: when logged out — show Log in -->
+  <div id="authLoggedOut" class="auth-row">
+    <button class="auth-inline-btn" id="loginTrigger">Log in</button>
+  </div>
+
+  <!-- AUTH: when logged in — show profile + Logout -->
+  <div id="authLoggedIn" class="auth-row hidden">
+    <span id="profileName" class="profile-name"></span>
+    <button class="auth-inline-btn" id="logoutBtn">Log out</button>
+  </div>
+
+  <!-- LOGIN FORM (collapsed by default) -->
+  <div id="loginFormWrap" class="auth-form-wrap hidden">
+    <label for="loginEmail" class="sr-only">Email</label>
+    <input type="email" id="loginEmail" placeholder="Email" aria-required="true" />
+    <label for="loginPassword" class="sr-only">Password</label>
+    <input type="password" id="loginPassword" placeholder="Password" aria-required="true" />
+    <button type="button" class="auth-btn" id="loginBtn">Log in</button>
+    <p class="auth-switch">No account? <a href="#" id="showRegister">Register</a></p>
+    <div id="authStatus" class="auth-status" role="status" aria-live="polite"></div>
+  </div>
+
+  <!-- REGISTER FORM (collapsed) -->
+  <div id="registerFormWrap" class="auth-form-wrap hidden">
+    <label for="registerUsername" class="sr-only">Username</label>
+    <input type="text" id="registerUsername" placeholder="Username" aria-required="true" />
+    <label for="registerEmail" class="sr-only">Email</label>
+    <input type="email" id="registerEmail" placeholder="Email" aria-required="true" />
+    <label for="registerPassword" class="sr-only">Password</label>
+    <input type="password" id="registerPassword" placeholder="Password" aria-required="true" />
+    <button type="button" class="auth-btn" id="registerBtn">Register</button>
+    <p class="auth-switch">Have account? <a href="#" id="showLogin">Log in</a></p>
+    <div id="authStatusRegister" class="auth-status" role="status" aria-live="polite"></div>
+  </div>
+
+  </main>
 
   <script src="popup.js"></script>
 </body>

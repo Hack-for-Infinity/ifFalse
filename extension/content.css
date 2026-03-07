@@ -1,0 +1,286 @@
+/* ============================================================================
+   NEUROREAD — CONTENT STYLES (Focus Mode)
+   ============================================================================ */
+
+/* Body when Focus Mode active */
+body.neuro-focus-active {
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 100vh !important;
+  background-color: #fafaf8 !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+body.neuro-focus-active.neuro-focus-sepia-body {
+  background-color: #fbf7e9 !important;
+}
+
+body.neuro-focus-active.neuro-focus-dark-body {
+  background-color: #1a1a1a !important;
+}
+
+/* Focus Mode wrapper — premium typography */
+.neuro-focus-wrapper {
+  max-width: min(95vw, 1600px) !important;
+  width: 95% !important;
+  min-width: 0 !important;
+  margin: 0 auto !important;
+  padding: 48px 64px !important;
+  box-sizing: border-box !important;
+  font-size: var(--neuro-focus-font-size, 22px) !important;
+  line-height: 1.7 !important;
+  font-family: Georgia, 'Times New Roman', serif !important;
+  color: #1a1a1a !important;
+  background-color: #fafaf8 !important;
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  letter-spacing: 0.01em !important;
+  word-spacing: 0.05em !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Force cloned content to use full wrapper width — overrides page layout styles */
+.neuro-focus-wrapper > * {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  flex: none !important;
+  box-sizing: border-box !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Reset width constraints — override page CSS that constrains content */
+.neuro-focus-wrapper div,
+.neuro-focus-wrapper section,
+.neuro-focus-wrapper article,
+.neuro-focus-wrapper main,
+.neuro-focus-wrapper aside,
+.neuro-focus-wrapper .container,
+.neuro-focus-wrapper [class*="container"],
+.neuro-focus-wrapper [class*="content"],
+.neuro-focus-wrapper [class*="wrapper"] {
+  max-width: none !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* MediaWiki / Wikipedia Vector — all content containers that constrain width */
+.neuro-focus-wrapper .mw-body,
+.neuro-focus-wrapper #mw-content-text,
+.neuro-focus-wrapper .mw-parser-output,
+.neuro-focus-wrapper #content,
+.neuro-focus-wrapper #bodyContent,
+.neuro-focus-wrapper .mw-body-content,
+.neuro-focus-wrapper .vector-body,
+.neuro-focus-wrapper .vector-body-v22,
+.neuro-focus-wrapper .mw-page-container,
+.neuro-focus-wrapper .mw-content-container {
+  max-width: none !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Force all descendants to use full available width */
+.neuro-focus-wrapper * {
+  max-width: none !important;
+  box-sizing: border-box !important;
+}
+
+.neuro-focus-wrapper h1 {
+  font-size: 2.2em !important;
+  line-height: 1.3 !important;
+  font-weight: 700 !important;
+  margin: 1.5em 0 0.5em !important;
+  letter-spacing: -0.01em !important;
+  color: #000 !important;
+}
+
+.neuro-focus-wrapper h2 {
+  font-size: 1.8em !important;
+  line-height: 1.3 !important;
+  font-weight: 600 !important;
+  margin: 1.3em 0 0.5em !important;
+}
+
+.neuro-focus-wrapper h3 {
+  font-size: 1.4em !important;
+  line-height: 1.4 !important;
+  font-weight: 600 !important;
+  margin: 1.2em 0 0.4em !important;
+}
+
+.neuro-focus-wrapper p {
+  margin-bottom: 1.8em !important;
+  orphans: 2 !important;
+  widows: 2 !important;
+}
+
+.neuro-focus-wrapper h1 + p,
+.neuro-focus-wrapper h2 + p,
+.neuro-focus-wrapper h3 + p {
+  margin-top: 0.5em !important;
+}
+
+.neuro-focus-wrapper a {
+  color: #2563eb !important;
+  text-decoration: underline !important;
+  text-decoration-color: rgba(37, 99, 235, 0.3) !important;
+  text-underline-offset: 2px !important;
+  font-weight: 500 !important;
+}
+
+.neuro-focus-wrapper a:hover {
+  text-decoration-color: #2563eb !important;
+}
+
+.neuro-focus-wrapper img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block !important;
+  margin: 2.5em auto !important;
+  border-radius: 4px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+}
+
+.neuro-focus-wrapper figure {
+  margin: 2.5em 0 !important;
+}
+
+.neuro-focus-wrapper figcaption {
+  font-size: 0.85em !important;
+  color: #666 !important;
+  text-align: center !important;
+  margin-top: 0.5em !important;
+  font-style: italic !important;
+}
+
+.neuro-focus-wrapper blockquote {
+  margin: 2em 0 !important;
+  padding: 0 0 0 1.5em !important;
+  border-left: 4px solid #4f46e5 !important;
+  font-style: italic !important;
+  color: #333 !important;
+}
+
+.neuro-focus-wrapper code {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace !important;
+  font-size: 0.9em !important;
+  background: #f0f0f0 !important;
+  padding: 0.2em 0.4em !important;
+  border-radius: 3px !important;
+  color: #1a1a1a !important;
+}
+
+.neuro-focus-wrapper pre {
+  background: #f5f5f5 !important;
+  padding: 1.5em !important;
+  border-radius: 8px !important;
+  overflow-x: auto !important;
+  margin: 2em 0 !important;
+  font-size: 0.9em !important;
+  line-height: 1.5 !important;
+}
+
+/* Sepia theme */
+.neuro-focus-wrapper.neuro-focus-sepia {
+  background-color: #fbf7e9 !important;
+  color: #3b2e1e !important;
+}
+
+/* Dark theme */
+.neuro-focus-wrapper.neuro-focus-dark {
+  background-color: #1a1a1a !important;
+  color: #e5e5e5 !important;
+}
+
+.neuro-focus-wrapper.neuro-focus-dark h1,
+.neuro-focus-wrapper.neuro-focus-dark h2,
+.neuro-focus-wrapper.neuro-focus-dark h3 {
+  color: #e5e5e5 !important;
+}
+
+.neuro-focus-wrapper.neuro-focus-dark a {
+  color: #818cf8 !important;
+}
+
+.neuro-focus-wrapper.neuro-focus-dark blockquote {
+  border-left-color: #818cf8 !important;
+  color: #ccc !important;
+}
+
+.neuro-focus-wrapper.neuro-focus-dark code {
+  background: #333 !important;
+  color: #e5e5e5 !important;
+}
+
+.neuro-focus-wrapper.neuro-focus-dark pre {
+  background: #333 !important;
+  color: #e5e5e5 !important;
+}
+
+.neuro-focus-wrapper.neuro-focus-dark figcaption {
+  color: #999 !important;
+}
+
+/* Exit button */
+.neuro-focus-exit {
+  position: fixed !important;
+  top: 16px !important;
+  right: 16px !important;
+  padding: 8px 16px !important;
+  background: #3b5bdb !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  z-index: 1000000 !important;
+  font-size: 14px !important;
+}
+
+.neuro-focus-exit:hover {
+  background: #2d4ac7 !important;
+}
+
+.neuro-focus-exit:focus-visible {
+  outline: 3px solid #f59f00 !important;
+  outline-offset: 2px !important;
+}
+
+/* Progress bar (Focus Mode) */
+body.neuro-focus-active #neuro-progress-bar {
+  height: 3px !important;
+  background: linear-gradient(90deg, #4f46e5, #818cf8) !important;
+  box-shadow: 0 1px 4px rgba(79, 70, 229, 0.2) !important;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .neuro-focus-wrapper {
+    width: 100% !important;
+    padding: 32px 20px !important;
+    font-size: 19px !important;
+    line-height: 1.6 !important;
+  }
+
+  .neuro-focus-wrapper h1 {
+    font-size: 2em !important;
+  }
+
+  .neuro-focus-wrapper h2 {
+    font-size: 1.6em !important;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  body.neuro-focus-active #neuro-progress-bar {
+    transition: none !important;
+  }
+}
