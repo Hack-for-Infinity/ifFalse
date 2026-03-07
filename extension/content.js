@@ -19,6 +19,9 @@ let bionicActive = false;
 // Required for perfect reversal — we put the original nodes back.
 let bionicSpans = [];
 
+// Sub-Feature 3 — OpenDyslexic font: injected style element for removal
+let fontStyleEl = null;
+
 
 // ============================================================
 // SUB-FEATURE 1 — WORD BOLD ANCHORING
@@ -176,7 +179,39 @@ function removeWordBolding() {
     }
   });
   bionicSpans = [];
-  bionicActive = false;
+}
+
+
+// ============================================================
+// SUB-FEATURE 3 — OPENDYSLEXIC FONT
+// ============================================================
+// Problem: Letters b/d/p/q flip and look identical when rotated.
+// Solution: OpenDyslexic — every letter has a weighted bottom.
+// The brain's visual cortex stops attempting to rotate letters.
+// Created by Abelardo Gonzalez. Free, open source.
+// ============================================================
+
+function applyOpenDyslexicFont() {
+  const style = document.createElement('style');
+  style.id = 'neuro-font-style';
+  style.textContent = `
+    @import url('https://fonts.cdnfonts.com/css/opendyslexic');
+    body.neuro-font-active,
+    body.neuro-font-active *:not(code):not(pre):not(kbd):not(samp) {
+      font-family: 'OpenDyslexic', Arial, sans-serif !important;
+    }
+  `;
+  document.head.appendChild(style);
+  fontStyleEl = style;
+  document.body.classList.add('neuro-font-active');
+}
+
+function removeOpenDyslexicFont() {
+  if (fontStyleEl?.parentNode) {
+    fontStyleEl.parentNode.removeChild(fontStyleEl);
+  }
+  fontStyleEl = null;
+  document.body.classList.remove('neuro-font-active');
 }
 
 
@@ -190,9 +225,13 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
   if (message.action === 'toggleBionic') {
     if (message.on) {
-      applyWordBolding();
+      applyOpenDyslexicFont();  // Sub-Feature 3 — font first
+      applyWordBolding();       // Sub-Feature 1 — then bold
+      bionicActive = true;
     } else {
       removeWordBolding();
+      removeOpenDyslexicFont();
+      bionicActive = false;
     }
     sendResponse({ success: true, active: bionicActive });
   }
