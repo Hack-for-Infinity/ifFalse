@@ -26,6 +26,10 @@ let mouseMoveHandler = null;
 // Sub-Feature 3 — OpenDyslexic font: injected style element for removal
 let fontStyleEl = null;
 
+// Sub-Feature 4 — Reading Progress Bar: bar element and scroll handler
+let progressBarEl = null;
+let scrollHandler = null;
+
 
 // ============================================================
 // SUB-FEATURE 1 — WORD BOLD ANCHORING
@@ -270,6 +274,62 @@ function removeOpenDyslexicFont() {
 
 
 // ============================================================
+// SUB-FEATURE 4 — READING PROGRESS BAR
+// ============================================================
+// Problem: Content feels infinite. No sense of progress. ADHD brain disengages.
+// Solution: Thin bar at top fills as user scrolls. Micro-dopamine signal.
+// ============================================================
+
+function applyProgressBar() {
+  const bar = document.createElement('div');
+  bar.id = 'neuro-progress-bar';
+
+  bar.style.cssText = `
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 0% !important;
+    height: 4px !important;
+    background: linear-gradient(90deg, #3b5bdb, #7048e8) !important;
+    z-index: 999999 !important;
+    transition: width 0.1s ease !important;
+    border-radius: 0 2px 2px 0 !important;
+  `;
+
+  document.body.appendChild(bar);
+  progressBarEl = bar;
+
+  scrollHandler = function() {
+    const scrolled = window.scrollY;
+    const totalHeight = document.body.scrollHeight - window.innerHeight;
+
+    if (totalHeight <= 0) {
+      bar.style.width = '100%';
+      return;
+    }
+
+    const percent = (scrolled / totalHeight) * 100;
+    bar.style.width = Math.min(percent, 100) + '%';
+  };
+
+  window.addEventListener('scroll', scrollHandler);
+  scrollHandler(); // Initial position
+}
+
+function removeProgressBar() {
+  if (progressBarEl?.parentNode) {
+    progressBarEl.parentNode.removeChild(progressBarEl);
+  }
+  progressBarEl = null;
+
+  if (scrollHandler) {
+    window.removeEventListener('scroll', scrollHandler);
+    scrollHandler = null;
+  }
+}
+
+
+// ============================================================
 // MESSAGE LISTENER
 // ============================================================
 // popup.js sends messages. We receive and execute.
@@ -281,11 +341,13 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     if (message.on) {
       applyOpenDyslexicFont();  // Sub-Feature 3
       applyLineHighlighter();   // Sub-Feature 2
+      applyProgressBar();       // Sub-Feature 4
       applyWordBolding();       // Sub-Feature 1
       bionicActive = true;
     } else {
       removeWordBolding();
       removeLineHighlighter();
+      removeProgressBar();
       removeOpenDyslexicFont();
       bionicActive = false;
     }
