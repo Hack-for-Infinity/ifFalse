@@ -30,6 +30,9 @@ let fontStyleEl = null;
 let progressBarEl = null;
 let scrollHandler = null;
 
+// Sub-Feature 5 — Letter Spacing: injected style element
+let spacingStyleEl = null;
+
 
 // ============================================================
 // SUB-FEATURE 1 — WORD BOLD ANCHORING
@@ -330,6 +333,45 @@ function removeProgressBar() {
 
 
 // ============================================================
+// SUB-FEATURE 5 — LETTER SPACING ENHANCER
+// ============================================================
+// Problem: Dense letter spacing causes words to blur together.
+// Solution: +0.05em letter-spacing, +0.1em word-spacing, 1.8 line-height.
+// ============================================================
+
+function applyLetterSpacing() {
+  const style = document.createElement('style');
+  style.id = 'neuro-spacing-style';
+  style.textContent = `
+    body.neuro-spacing-active p,
+    body.neuro-spacing-active li,
+    body.neuro-spacing-active td,
+    body.neuro-spacing-active span,
+    body.neuro-spacing-active div,
+    body.neuro-spacing-active h1,
+    body.neuro-spacing-active h2,
+    body.neuro-spacing-active h3,
+    body.neuro-spacing-active h4 {
+      letter-spacing: 0.05em !important;
+      word-spacing: 0.1em !important;
+      line-height: 1.8 !important;
+    }
+  `;
+  document.head.appendChild(style);
+  spacingStyleEl = style;
+  document.body.classList.add('neuro-spacing-active');
+}
+
+function removeLetterSpacing() {
+  if (spacingStyleEl?.parentNode) {
+    spacingStyleEl.parentNode.removeChild(spacingStyleEl);
+  }
+  spacingStyleEl = null;
+  document.body.classList.remove('neuro-spacing-active');
+}
+
+
+// ============================================================
 // MESSAGE LISTENER
 // ============================================================
 // popup.js sends messages. We receive and execute.
@@ -342,12 +384,14 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       applyOpenDyslexicFont();  // Sub-Feature 3
       applyLineHighlighter();   // Sub-Feature 2
       applyProgressBar();       // Sub-Feature 4
+      applyLetterSpacing();     // Sub-Feature 5
       applyWordBolding();       // Sub-Feature 1
       bionicActive = true;
     } else {
       removeWordBolding();
       removeLineHighlighter();
       removeProgressBar();
+      removeLetterSpacing();
       removeOpenDyslexicFont();
       bionicActive = false;
     }
