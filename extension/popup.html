@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeuroRead</title>
+  <style>
+
+    /* ── RESET ───────────────────────────────────────────── */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ── BASE ────────────────────────────────────────────── */
+    body {
+      width: 320px;
+      min-height: 200px;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f8f7f4;
+      padding: 20px;
+      color: #1a1a1a;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────── */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .logo {
+      font-size: 22px;
+    }
+
+    .title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1a1a1a;
+      letter-spacing: -0.3px;
+    }
+
+    .tagline {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 20px;
+      padding-left: 32px;
+    }
+
+    /* ── SECTION LABEL ───────────────────────────────────── */
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #aaa;
+      margin-bottom: 10px;
+    }
+
+    /* ── MAIN TOGGLE BUTTON ──────────────────────────────── */
+    .main-toggle {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 2px solid #3b5bdb;
+      background: #ffffff;
+      color: #3b5bdb;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      margin-bottom: 12px;
+    }
+
+    .main-toggle:hover {
+      background: #eef2ff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 91, 219, 0.15);
+    }
+
+    .main-toggle.active {
+      background: #3b5bdb;
+      color: #ffffff;
+      box-shadow: 0 4px 16px rgba(59, 91, 219, 0.35);
+    }
+
+    .main-toggle:focus {
+      outline: 3px solid #f59f00;
+      outline-offset: 2px;
+    }
+
+    .toggle-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toggle-icon {
+      font-size: 18px;
+    }
+
+    .toggle-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .toggle-title {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .toggle-subtitle {
+      font-size: 11px;
+      font-weight: 400;
+      opacity: 0.75;
+    }
+
+    .toggle-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: rgba(59, 91, 219, 0.1);
+      color: #3b5bdb;
+      transition: all 0.2s;
+    }
+
+    .main-toggle.active .toggle-pill {
+      background: rgba(255,255,255,0.2);
+      color: white;
+    }
+
+    /* ── SUB-FEATURES LIST ───────────────────────────────── */
+    .sub-features {
+      background: white;
+      border-radius: 10px;
+      border: 1px solid #ebebeb;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .sub-feature-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-bottom: 1px solid #f5f5f5;
+      font-size: 13px;
+      color: #444;
+    }
+
+    .sub-feature-item:last-child {
+      border-bottom: none;
+    }
+
+    .sub-feature-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sub-icon {
+      font-size: 15px;
+      width: 20px;
+      text-align: center;
+    }
+
+    .sub-name {
+      font-weight: 600;
+      font-size: 12px;
+      color: #333;
+    }
+
+    .sub-desc {
+      font-size: 11px;
+      color: #999;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #e0e0e0;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .status-dot.on {
+      background: #40c057;
+      box-shadow: 0 0 6px rgba(64, 192, 87, 0.5);
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #bbb;
+      margin-top: 4px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <span class="logo">🧠</span>
+    <span class="title">NeuroRead</span>
+  </div>
+  <p class="tagline">Making the web readable for every brain.</p>
+
+  <!-- SECTION LABEL -->
+  <p class="section-label">Bionic Reading</p>
+
+  <!-- MAIN TOGGLE BUTTON -->
+  <button
+    class="main-toggle"
+    id="bionicBtn"
+    aria-pressed="false"
+    aria-label="Toggle Bionic Reading"
+  >
+    <div class="toggle-left">
+      <span class="toggle-icon">✦</span>
+      <div class="toggle-text">
+        <span class="toggle-title">Enable Bionic Reading</span>
+        <span class="toggle-subtitle">7 features activate instantly</span>
+      </div>
+    </div>
+    <span class="toggle-pill" id="togglePill">OFF</span>
+  </button>
+
+  <!-- SUB-FEATURES STATUS LIST -->
+  <div class="sub-features" id="subFeaturesList">
+
+    <div class="sub-feature-item">
+      <div class="sub-feature-left">
+        <span class="sub-icon">𝐁</span>
+        <div>
+          <div class="sub-name">Word Bold Anchoring</div>
+          <div class="sub-desc">First 45% of every word bolded</div>
+        </div>
+      </div>
+      <div class="status-dot" id="dot-bionic"></div>
+    </div>
+
+    <div class="sub-feature-item">
+      <div class="sub-feature-left">
+        <span class="sub-icon">━</span>
+        <div>
+          <div class="sub-name">Line Highlighter</div>
+          <div class="sub-desc">Tracks your reading line</div>
+        </div>
+      </div>
+      <div class="status-dot" id="dot-line"></div>
+    </div>
+
+    <div class="sub-feature-item">
+      <div class="sub-feature-left">
+        <span class="sub-icon">Aa</span>
+        <div>
+          <div class="sub-name">OpenDyslexic Font</div>
+          <div class="sub-desc">Letters that cannot flip</div>
+        </div>
+      </div>
+      <div class="status-dot" id="dot-font"></div>
+    </div>
+
+    <div class="sub-feature-item">
+      <div class="sub-feature-left">
+        <span class="sub-icon">▓</span>
+        <div>
+          <div class="sub-name">Reading Progress Bar</div>
+          <div class="sub-desc">Shows how far through article</div>
+        </div>
+      </div>
+      <div class="status-dot" id="dot-progress"></div>
+    </div>
+
+    <div class="sub-feature-item">
+      <div class="sub-feature-left">
+        <span class="sub-icon">↔</span>
+        <div>
+          <div class="sub-name">Letter Spacing</div>
+          <div class="sub-desc">Stops words blurring together</div>
+        </div>
+      </div>
+      <div class="status-dot" id="dot-spacing"></div>
+    </div>
+
+    <div class="sub-feature-item">
+      <div class="sub-feature-left">
+        <span class="sub-icon">·</span>
+        <div>
+          <div class="sub-name">Syllable Markers</div>
+          <div class="sub-desc">Breaks long words into chunks</div>
+        </div>
+      </div>
+      <div class="status-dot" id="dot-syllable"></div>
+    </div>
+
+    <div class="sub-feature-item">
+      <div class="sub-feature-left">
+        <span class="sub-icon">¶</span>
+        <div>
+          <div class="sub-name">Paragraph Spacing</div>
+          <div class="sub-desc">Breathing room between blocks</div>
+        </div>
+      </div>
+      <div class="status-dot" id="dot-paragraph"></div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">1 in 5 people needed this.</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
