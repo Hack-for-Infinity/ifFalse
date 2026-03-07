@@ -23,9 +23,9 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(summarize.router)
-# app.include_router(feedback.router)
-# app.include_router(settings.router)
-# app.include_router(subscription.router)
+app.include_router(feedback.router)
+app.include_router(settings.router)
+app.include_router(subscription.router)
 
 
 @app.get("/", tags=["Health"])
