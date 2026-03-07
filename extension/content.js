@@ -1,15 +1,13 @@
 // ============================================================
 // NEUROREAD — content.js
 // ============================================================
-// Injected into every webpage automatically by Chrome.
-// Sits silently until the user clicks "Enable Bionic Reading" in the popup.
-// When activated, transforms the DOM in place — same tab, same URL, no reload.
-//
-// SUB-FEATURE 1 — WORD BOLD ANCHORING (Bionic Reading core)
-// Problem: Dyslexic readers lose their place. Words blur together.
-// Solution: Bold the first 45% of every word. Creates visual anchors.
+// Wrapped in IIFE to avoid "Identifier already declared" when
+// executeScript re-injects this file into the same page.
 // ============================================================
-
+if (window.__neuroReadInit) return;
+window.__neuroReadInit = true;
+(function() {
+'use strict';
 
 // ── GLOBAL STATE ─────────────────────────────────────────────
 // Tracks whether Bionic Reading is currently active on this page.
@@ -36,7 +34,116 @@ let spacingStyleEl = null;
 // Sub-Feature 7 — Paragraph Breathing: injected style element
 let paraStyleEl = null;
 
+// Focus Mode — first subfeature: core reading view
+let focusActive = false;
+let focusWrapper = null;
+let focusExitBtn = null;
+let focusWikiMode = false;
+let focusSavedContent = null;
+let focusSavedParent = null;
+let focusSavedNext = null;
+let focusHiddenNodes = [];
 
+// ============================================================
+// FOCUS MODE — FIRST SUBFEATURE (core reading view)
+// ============================================================
+// Wikipedia: extract only main content for full width control.
+// Other sites: wrap entire page.
+// ============================================================
+
+function applyFocusMode() {
+  if (focusActive) return;
+  const body = document.body;
+  if (!body) return;
+
+  const isWiki = /wikipedia\.org|wikimedia\.org|wikimediafoundation\.org/.test(window.location.hostname);
+  let mainContent = null;
+
+  if (isWiki) {
+    mainContent = document.getElementById('mw-content-text') ||
+      document.getElementById('bodyContent') ||
+      document.querySelector('.mw-parser-output');
+  }
+
+  focusWrapper = document.createElement('div');
+  focusWrapper.className = 'neuro-focus-wrapper';
+  focusWrapper.id = 'neuro-focus-content';
+  focusWrapper.style.cssText = 'max-width:min(95vw,1600px)!important;width:95%!important;margin:0 auto!important;padding:48px 64px!important;box-sizing:border-box!important;';
+
+  if (isWiki && mainContent) {
+    focusWikiMode = true;
+    focusSavedContent = mainContent;
+    focusSavedParent = mainContent.parentNode;
+    focusSavedNext = mainContent.nextSibling;
+    focusWrapper.appendChild(mainContent);
+    body.appendChild(focusWrapper);
+    focusHiddenNodes = [];
+    for (let i = 0; i < body.children.length; i++) {
+      const c = body.children[i];
+      if (c !== focusWrapper && c.id !== 'neuro-focus-content') {
+        if (c.style.display !== 'none') {
+          c.dataset.neuroFocusHidden = '1';
+          c.style.display = 'none';
+          focusHiddenNodes.push(c);
+        }
+      }
+    }
+  } else {
+    focusWikiMode = false;
+    while (body.firstChild) {
+      const child = body.firstChild;
+      if (child.id === 'neuro-focus-content' || child.classList?.contains('neuro-focus-exit')) continue;
+      focusWrapper.appendChild(child);
+    }
+    body.appendChild(focusWrapper);
+  }
+
+  focusExitBtn = document.createElement('button');
+  focusExitBtn.className = 'neuro-focus-exit';
+  focusExitBtn.textContent = 'Exit Focus';
+  focusExitBtn.setAttribute('aria-label', 'Exit Focus Mode');
+  focusExitBtn.addEventListener('click', exitFocusMode);
+  body.appendChild(focusExitBtn);
+
+  body.classList.add('neuro-focus-active');
+  focusActive = true;
+}
+
+function exitFocusMode() {
+  if (!focusActive || !focusWrapper) return;
+  const body = document.body;
+  if (!body) return;
+
+  body.classList.remove('neuro-focus-active');
+  if (focusExitBtn?.parentNode) focusExitBtn.parentNode.removeChild(focusExitBtn);
+  focusExitBtn = null;
+
+  if (focusWikiMode && focusSavedContent && focusSavedParent) {
+    focusWrapper.removeChild(focusSavedContent);
+    if (focusSavedNext) {
+      focusSavedParent.insertBefore(focusSavedContent, focusSavedNext);
+    } else {
+      focusSavedParent.appendChild(focusSavedContent);
+    }
+    for (const el of focusHiddenNodes) {
+      el.style.display = '';
+      delete el.dataset.neuroFocusHidden;
+    }
+    focusSavedContent = null;
+    focusSavedParent = null;
+    focusSavedNext = null;
+    focusHiddenNodes = [];
+    focusWikiMode = false;
+  } else {
+    while (focusWrapper.firstChild) {
+      body.insertBefore(focusWrapper.firstChild, focusWrapper);
+    }
+  }
+
+  if (focusWrapper.parentNode) focusWrapper.parentNode.removeChild(focusWrapper);
+  focusWrapper = null;
+  focusActive = false;
+}
 
 // ============================================================
 // SUB-FEATURE 1 — WORD BOLD ANCHORING
@@ -296,20 +403,20 @@ function removeLineHighlighter() {
 // Created by Abelardo Gonzalez. Free, open source.
 // ============================================================
 
-function applyOpenDyslexicFont() {
-  const style = document.createElement('style');
-  style.id = 'neuro-font-style';
-  style.textContent = `
-    @import url('https://fonts.cdnfonts.com/css/opendyslexic');
-    body.neuro-font-active,
-    body.neuro-font-active *:not(code):not(pre):not(kbd):not(samp) {
-      font-family: 'OpenDyslexic', Arial, sans-serif !important;
-    }
-  `;
-  document.head.appendChild(style);
-  fontStyleEl = style;
-  document.body.classList.add('neuro-font-active');
-}
+// function applyOpenDyslexicFont() {
+//   const style = document.createElement('style');
+//   style.id = 'neuro-font-style';
+//   style.textContent = `
+//     @import url('https://fonts.cdnfonts.com/css/opendyslexic');
+//     body.neuro-font-active,
+//     body.neuro-font-active *:not(code):not(pre):not(kbd):not(samp) {
+//       font-family: 'OpenDyslexic', Arial, sans-serif !important;
+//     }
+//   `;
+//   document.head.appendChild(style);
+//   fontStyleEl = style;
+//   document.body.classList.add('neuro-font-active');
+// }
 
 function removeOpenDyslexicFont() {
   if (fontStyleEl?.parentNode) {
@@ -348,7 +455,7 @@ function applyProgressBar() {
 
   scrollHandler = function() {
     const scrolled = window.scrollY;
-    const totalHeight = document.body.scrollHeight - window.innerHeight;
+    const totalHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
 
     if (totalHeight <= 0) {
       bar.style.width = '100%';
@@ -361,6 +468,7 @@ function applyProgressBar() {
 
   window.addEventListener('scroll', scrollHandler);
   scrollHandler(); // Initial position
+
 }
 
 function removeProgressBar() {
@@ -466,20 +574,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
   if (message.action === 'toggleBionic') {
     if (message.on) {
-      applyOpenDyslexicFont();  // Sub-Feature 3
-      applyLineHighlighter();   // Sub-Feature 2
-      applyProgressBar();       // Sub-Feature 4
-      applyLetterSpacing();     // Sub-Feature 5
-      applyParagraphSpacing();  // Sub-Feature 7
-      applyWordBolding();       // Sub-Feature 1 (includes Syllable Markers)
+      applyWordBolding();  // Sub-Feature 1 only — Word Bold Anchoring
       bionicActive = true;
     } else {
       removeWordBolding();
-      removeLineHighlighter();
-      removeProgressBar();
-      removeLetterSpacing();
-      removeParagraphSpacing();
-      removeOpenDyslexicFont();
       bionicActive = false;
     }
     sendResponse({ success: true, active: bionicActive });
@@ -489,6 +587,53 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     sendResponse({ active: bionicActive });
   }
 
-  // Keep channel open for async response
+  if (message.action === 'getPageContent') {
+    const url = window.location.href;
+    const content = document.body.innerText.slice(0, 50000);
+    sendResponse({ url, content });
+  }
+
+  if (message.action === 'toggleFocus') {
+    if (message.on) {
+      applyFocusMode();
+      focusActive = true;
+    } else {
+      exitFocusMode();
+    }
+    sendResponse({ success: true, active: focusActive });
+  }
+
+  if (message.action === 'getFocusState') {
+    sendResponse({ active: focusActive });
+  }
+
+  if (message.action === 'restoreState') {
+    const state = message.state || {};
+    if (state.bionic) {
+      applyWordBolding();
+      bionicActive = true;
+    }
+    if (state.focus) {
+      applyFocusMode();
+      focusActive = true;
+    }
+    sendResponse({ success: true });
+  }
+
   return true;
 });
+
+chrome.runtime.sendMessage({ action: 'getTabState' }, (response) => {
+  const state = response?.state || {};
+  if (state.bionic) {
+    applyWordBolding();
+    bionicActive = true;
+  }
+  if (state.focus) {
+    applyFocusMode();
+    focusActive = true;
+  }
+});
+
+})();
+

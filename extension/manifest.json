@@ -8,14 +8,23 @@
       "scripting",
       "storage"
     ],
+    "host_permissions": [
+      "https://neuroread.khaldosh.dev/*",
+      "https://*/*",
+      "http://*/*"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
     "action": {
       "default_popup": "popup.html",
-      "default_title": "NeuroRead"
+      "default_title": "NeuroRead",
+      "default_icon": "favicon.png"
     },
     "content_scripts": [
       {
         "matches": ["<all_urls>"],
-        "css": ["injected.css"],
+        "css": ["injected.css", "content.css"],
         "js": ["content.js"]
       }
     ]
