@@ -34,6 +34,7 @@ let scrollHandler = null;
 let spacingStyleEl = null;
 
 
+
 // ============================================================
 // SUB-FEATURE 1 — WORD BOLD ANCHORING
 // ============================================================
@@ -49,6 +50,43 @@ let spacingStyleEl = null;
 // ============================================================
 
 /**
+ * Splits word into syllables (VCV pattern). Words > 8 chars only.
+ * @param {string} clean - Word without punctuation
+ * @returns {string[]|null} - Syllables or null if no split
+ */
+function splitIntoSyllables(clean) {
+  if (clean.length <= 8) return null;
+  const vowels = 'aeiouAEIOU';
+  const parts = [];
+  let current = '';
+  for (let i = 0; i < clean.length; i++) {
+    current += clean[i];
+    if (i < clean.length - 2 &&
+        vowels.includes(clean[i]) &&
+        !vowels.includes(clean[i + 1]) &&
+        vowels.includes(clean[i + 2])) {
+      parts.push(current);
+      current = '';
+    }
+  }
+  if (current) parts.push(current);
+  return parts.length > 1 ? parts : null;
+}
+
+/**
+ * Adds syllable markers (·) to long words. Preserves punctuation.
+ */
+function addSyllableMarkers(word) {
+  const leading = (word.match(/^[^a-zA-Z]*/) || [''])[0];
+  const trailing = (word.match(/[^a-zA-Z]*$/) || [''])[0];
+  const clean = word.replace(/[^a-zA-Z]/g, '');
+  if (clean.length <= 8) return word;
+  const syllables = splitIntoSyllables(clean);
+  if (!syllables) return word;
+  return leading + syllables.join('\u00B7') + trailing;
+}
+
+/**
  * Transforms a single word using Bionic Reading.
  * @param {string} word - A single word (no spaces)
  * @returns {string} - HTML with first 45% wrapped in <b>
@@ -56,10 +94,13 @@ let spacingStyleEl = null;
 function boldWord(word) {
   if (!word || word.length === 0) return word;
 
+  // Sub-Feature 6: Add syllable markers to long words first
+  const processed = addSyllableMarkers(word);
+
   // First 45% of characters become the "anchor" — minimum 1 character
-  const boldLength = Math.max(1, Math.ceil(word.length * 0.45));
-  const boldPart = word.slice(0, boldLength);
-  const normalPart = word.slice(boldLength);
+  const boldLength = Math.max(1, Math.ceil(processed.length * 0.45));
+  const boldPart = processed.slice(0, boldLength);
+  const normalPart = processed.slice(boldLength);
 
   return '<b style="font-weight:700">' + boldPart + '</b>' + normalPart;
 }
@@ -385,7 +426,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       applyLineHighlighter();   // Sub-Feature 2
       applyProgressBar();       // Sub-Feature 4
       applyLetterSpacing();     // Sub-Feature 5
-      applyWordBolding();       // Sub-Feature 1
+      applyWordBolding();       // Sub-Feature 1 (includes Syllable Markers)
       bionicActive = true;
     } else {
       removeWordBolding();
