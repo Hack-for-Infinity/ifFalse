@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeuroRead</title>
+  <style>
+
+    /* ── RESET ───────────────────────────────────────────── */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ── BASE ────────────────────────────────────────────── */
+    body {
+      width: 320px;
+      min-height: 140px;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f8f7f4;
+      padding: 20px;
+      color: #1a1a1a;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────── */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .logo {
+      font-size: 22px;
+    }
+
+    .title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1a1a1a;
+      letter-spacing: -0.3px;
+    }
+
+    .tagline {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 20px;
+      padding-left: 32px;
+    }
+
+    /* ── MAIN TOGGLE BUTTON ──────────────────────────────── */
+    .main-toggle {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 2px solid #3b5bdb;
+      background: #ffffff;
+      color: #3b5bdb;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      margin-bottom: 12px;
+    }
+
+    .main-toggle:hover {
+      background: #eef2ff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 91, 219, 0.15);
+    }
+
+    .main-toggle.active {
+      background: #3b5bdb;
+      color: #ffffff;
+      box-shadow: 0 4px 16px rgba(59, 91, 219, 0.35);
+    }
+
+    .main-toggle:focus {
+      outline: 3px solid #f59f00;
+      outline-offset: 2px;
+    }
+
+    .toggle-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toggle-icon {
+      font-size: 18px;
+    }
+
+    .toggle-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .toggle-title {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .toggle-subtitle {
+      font-size: 11px;
+      font-weight: 400;
+      opacity: 0.75;
+    }
+
+    .toggle-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: rgba(59, 91, 219, 0.1);
+      color: #3b5bdb;
+      transition: all 0.2s;
+    }
+
+    .main-toggle.active .toggle-pill {
+      background: rgba(255,255,255,0.2);
+      color: white;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #bbb;
+      margin-top: 4px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <span class="logo">🧠</span>
+    <span class="title">NeuroRead</span>
+  </div>
+  <p class="tagline">Making the web readable for every brain.</p>
+
+  <!-- MAIN TOGGLE BUTTON -->
+  <button
+    class="main-toggle"
+    id="bionicBtn"
+    aria-pressed="false"
+    aria-label="Toggle Bionic Reading"
+  >
+    <div class="toggle-left">
+      <span class="toggle-icon">✦</span>
+      <div class="toggle-text">
+        <span class="toggle-title">Enable Bionic Reading</span>
+        <span class="toggle-subtitle">Word Bold Anchoring — first 45% of every word</span>
+      </div>
+    </div>
+    <span class="toggle-pill" id="togglePill">OFF</span>
+  </button>
+
+  <!-- FOOTER -->
+  <div class="footer">1 in 5 people needed this.</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

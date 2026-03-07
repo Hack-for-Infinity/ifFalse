@@ -1,0 +1,29 @@
+# NeuroRead ? Chrome Extension
+
+Brain-friendly reading for ADHD and Dyslexic minds.
+
+## Current Status: Sub-Feature 1 ? Word Bold Anchoring
+
+**One click.** Every word on any webpage gets its first 45% bolded. Creates visual anchors. Reversible. Works on the same page ? no new tab, no reload.
+
+### How to Test
+
+1. Load the extension: `chrome://extensions` ? Load unpacked ? select `extension` folder
+2. Open https://en.wikipedia.org/wiki/Dyslexia
+3. Click the NeuroRead icon ? Enable Bionic Reading
+4. Watch the page transform. Click again to restore.
+
+### Architecture (for evaluators)
+
+- **content.js** ? Injected into every webpage. TreeWalker finds text nodes, transforms words (first 45% bold), stores originals for reversal.
+- **popup.js** ? Sends `{ action: 'toggleBionic', on: true/false }` to content.js via Chrome messaging.
+- **Same-page transformation** ? No fetch, no new tab. DOM is modified in place.
+
+### Dev Branch
+
+```bash
+cd ifFalse
+git checkout -b dev
+git add extension/
+git commit -m "Sub-Feature 1: Word Bold Anchoring ? clean implementation"
+```
