@@ -4,9 +4,9 @@ from backend.core.config import ANTHROPIC_API_KEY
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
 LENGTH_INSTRUCTIONS = {
-    "short": "Provide a very concise summary in 2-3 sentences.",
-    "medium": "Provide a clear summary in 1-2 short paragraphs.",
-    "long": "Provide a detailed summary covering all key points in 3-4 paragraphs.",
+    "short": "Provide a very concise summary in 1 page.",
+    "medium": "Provide a clear summary in 2-3 pages.",
+    "long": "Provide a detailed summary covering all key points.",
 }
 
 
