@@ -17,51 +17,75 @@ let bionicOn = false;
 // ── ELEMENT REFERENCES ───────────────────────────────────────
 const bionicBtn  = document.getElementById('bionicBtn');
 const togglePill = document.getElementById('togglePill');
-const dotBionic  = document.getElementById('dot-bionic');
 
 
 // ── HELPER: Send message to content script in active tab ──────
+// If content script isn't loaded (e.g. page opened before extension install),
+// inject it first, then send.
 async function sendToTab(message) {
   const [tab] = await chrome.tabs.query({
     active: true,
     currentWindow: true
   });
 
-  return chrome.tabs.sendMessage(tab.id, message);
-}
+  if (!tab?.id) throw new Error('No active tab');
 
-
-// ── HELPER: Update status dot ──────────────────────────────────
-function updateDot(isOn) {
-  if (dotBionic) {
-    dotBionic.classList.toggle('on', isOn);
+  try {
+    return await chrome.tabs.sendMessage(tab.id, message);
+  } catch (err) {
+    // Content script not injected — inject it, then retry
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      files: ['content.js']
+    });
+    return await chrome.tabs.sendMessage(tab.id, message);
   }
 }
 
 
 // ── HELPER: Update button appearance ───────────────────────────
 function updateButton(isOn) {
+  if (!bionicBtn || !togglePill) return;
   if (isOn) {
     bionicBtn.classList.add('active');
     bionicBtn.setAttribute('aria-pressed', 'true');
-    bionicBtn.querySelector('.toggle-title').textContent = 'Disable Bionic Reading';
+    const title = bionicBtn.querySelector('.toggle-title');
+    if (title) title.textContent = 'Disable Bionic Reading';
     togglePill.textContent = 'ON';
   } else {
     bionicBtn.classList.remove('active');
     bionicBtn.setAttribute('aria-pressed', 'false');
-    bionicBtn.querySelector('.toggle-title').textContent = 'Enable Bionic Reading';
+    const title = bionicBtn.querySelector('.toggle-title');
+    if (title) title.textContent = 'Enable Bionic Reading';
     togglePill.textContent = 'OFF';
   }
 }
 
 
+// ── SYNC UI ON POPUP OPEN ─────────────────────────────────────
+// Popup is recreated each time it opens — fetch actual state from content script
+async function syncUIWithPage() {
+  try {
+    const res = await sendToTab({ action: 'getState' });
+    bionicOn = res?.active ?? false;
+  } catch {
+    bionicOn = false;
+  }
+  updateButton(bionicOn);
+}
+
+// Run when popup opens
+syncUIWithPage();
+
+
 // ── BIONIC READING TOGGLE ─────────────────────────────────────
 bionicBtn.addEventListener('click', async function() {
+  if (!bionicBtn) return;
+
   bionicOn = !bionicOn;
 
   // Update UI immediately (feels instant)
   updateButton(bionicOn);
-  updateDot(bionicOn);
 
   try {
     await sendToTab({
@@ -69,10 +93,9 @@ bionicBtn.addEventListener('click', async function() {
       on: bionicOn
     });
   } catch (err) {
-    // Messaging fails on chrome://, edge://, etc. — reset UI
+    // Fails on chrome://, edge://, extensions page — reset UI
     bionicOn = !bionicOn;
     updateButton(bionicOn);
-    updateDot(bionicOn);
     console.warn('NeuroRead: Could not reach content script.', err);
   }
 });

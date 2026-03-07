@@ -16,7 +16,7 @@
     /* ── BASE ────────────────────────────────────────────── */
     body {
       width: 320px;
-      min-height: 180px;
+      min-height: 140px;
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: #f8f7f4;
       padding: 20px;
@@ -47,16 +47,6 @@
       color: #888;
       margin-bottom: 20px;
       padding-left: 32px;
-    }
-
-    /* ── SECTION LABEL ───────────────────────────────────── */
-    .section-label {
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #aaa;
-      margin-bottom: 10px;
     }
 
     /* ── MAIN TOGGLE BUTTON ──────────────────────────────── */
@@ -138,61 +128,6 @@
       color: white;
     }
 
-    /* ── SUB-FEATURE STATUS (Single item for Sub-Feature 1) ─── */
-    .sub-features {
-      background: white;
-      border-radius: 10px;
-      border: 1px solid #ebebeb;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-
-    .sub-feature-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 14px;
-      font-size: 13px;
-      color: #444;
-    }
-
-    .sub-feature-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .sub-icon {
-      font-size: 15px;
-      width: 20px;
-      text-align: center;
-    }
-
-    .sub-name {
-      font-weight: 600;
-      font-size: 12px;
-      color: #333;
-    }
-
-    .sub-desc {
-      font-size: 11px;
-      color: #999;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #e0e0e0;
-      transition: background 0.2s;
-      flex-shrink: 0;
-    }
-
-    .status-dot.on {
-      background: #40c057;
-      box-shadow: 0 0 6px rgba(64, 192, 87, 0.5);
-    }
-
     /* ── FOOTER ──────────────────────────────────────────── */
     .footer {
       text-align: center;
@@ -212,9 +147,6 @@
   </div>
   <p class="tagline">Making the web readable for every brain.</p>
 
-  <!-- SECTION LABEL -->
-  <p class="section-label">Bionic Reading — Sub-Feature 1</p>
-
   <!-- MAIN TOGGLE BUTTON -->
   <button
     class="main-toggle"
@@ -231,20 +163,6 @@
     </div>
     <span class="toggle-pill" id="togglePill">OFF</span>
   </button>
-
-  <!-- SUB-FEATURE STATUS — Word Bold Anchoring only -->
-  <div class="sub-features" id="subFeaturesList">
-    <div class="sub-feature-item">
-      <div class="sub-feature-left">
-        <span class="sub-icon">𝐁</span>
-        <div>
-          <div class="sub-name">Word Bold Anchoring</div>
-          <div class="sub-desc">First 45% of every word bolded — creates visual anchors</div>
-        </div>
-      </div>
-      <div class="status-dot" id="dot-bionic"></div>
-    </div>
-  </div>
 
   <!-- FOOTER -->
   <div class="footer">1 in 5 people needed this.</div>

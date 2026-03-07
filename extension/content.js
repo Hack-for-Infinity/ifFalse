@@ -92,17 +92,25 @@ const SKIP_TAGS = [
   'BUTTON', 'CODE', 'PRE', 'KBD', 'VAR', 'SAMP', 'MATH', 'SVG', 'CANVAS'
 ];
 
-function shouldSkipNode(node) {
-  const tag = node.parentElement
-    ? node.parentElement.tagName.toUpperCase()
-    : '';
+/** Check if element is inside any NeuroRead-transformed container */
+function isInsideNeuroRead(element) {
+  let el = element;
+  while (el) {
+    if (el.getAttribute?.('data-neuroread') === 'true') return true;
+    el = el.parentElement;
+  }
+  return false;
+}
 
+function shouldSkipNode(node) {
+  const parent = node.parentElement;
+  if (!parent) return true;
+
+  const tag = parent.tagName.toUpperCase();
   if (SKIP_TAGS.includes(tag)) return true;
 
-  // Already processed by us — avoid double-processing
-  if (node.parentElement?.getAttribute('data-neuroread') === 'true') {
-    return true;
-  }
+  // Skip text inside our own spans (e.g. inside <b> within our span)
+  if (isInsideNeuroRead(parent)) return true;
 
   return false;
 }
@@ -187,6 +195,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       removeWordBolding();
     }
     sendResponse({ success: true, active: bionicActive });
+  }
+
+  if (message.action === 'getState') {
+    sendResponse({ active: bionicActive });
   }
 
   // Keep channel open for async response
