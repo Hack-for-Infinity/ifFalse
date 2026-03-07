@@ -27,6 +27,8 @@ services:
       - ./backend/.env
     environment:
       DATABASE_URL: postgresql://neuroread:neuroread_secret@db:5432/neuroread
+    volumes:
+      - ./:/app
     depends_on:
       db:
         condition: service_healthy
