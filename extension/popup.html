@@ -16,7 +16,7 @@
     /* ── BASE ────────────────────────────────────────────── */
     body {
       width: 320px;
-      min-height: 200px;
+      min-height: 180px;
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: #f8f7f4;
       padding: 20px;
@@ -138,7 +138,7 @@
       color: white;
     }
 
-    /* ── SUB-FEATURES LIST ───────────────────────────────── */
+    /* ── SUB-FEATURE STATUS (Single item for Sub-Feature 1) ─── */
     .sub-features {
       background: white;
       border-radius: 10px;
@@ -152,13 +152,8 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px 14px;
-      border-bottom: 1px solid #f5f5f5;
       font-size: 13px;
       color: #444;
-    }
-
-    .sub-feature-item:last-child {
-      border-bottom: none;
     }
 
     .sub-feature-left {
@@ -218,7 +213,7 @@
   <p class="tagline">Making the web readable for every brain.</p>
 
   <!-- SECTION LABEL -->
-  <p class="section-label">Bionic Reading</p>
+  <p class="section-label">Bionic Reading — Sub-Feature 1</p>
 
   <!-- MAIN TOGGLE BUTTON -->
   <button
@@ -231,92 +226,24 @@
       <span class="toggle-icon">✦</span>
       <div class="toggle-text">
         <span class="toggle-title">Enable Bionic Reading</span>
-        <span class="toggle-subtitle">7 features activate instantly</span>
+        <span class="toggle-subtitle">Word Bold Anchoring — first 45% of every word</span>
       </div>
     </div>
     <span class="toggle-pill" id="togglePill">OFF</span>
   </button>
 
-  <!-- SUB-FEATURES STATUS LIST -->
+  <!-- SUB-FEATURE STATUS — Word Bold Anchoring only -->
   <div class="sub-features" id="subFeaturesList">
-
     <div class="sub-feature-item">
       <div class="sub-feature-left">
         <span class="sub-icon">𝐁</span>
         <div>
           <div class="sub-name">Word Bold Anchoring</div>
-          <div class="sub-desc">First 45% of every word bolded</div>
+          <div class="sub-desc">First 45% of every word bolded — creates visual anchors</div>
         </div>
       </div>
       <div class="status-dot" id="dot-bionic"></div>
     </div>
-
-    <div class="sub-feature-item">
-      <div class="sub-feature-left">
-        <span class="sub-icon">━</span>
-        <div>
-          <div class="sub-name">Line Highlighter</div>
-          <div class="sub-desc">Tracks your reading line</div>
-        </div>
-      </div>
-      <div class="status-dot" id="dot-line"></div>
-    </div>
-
-    <div class="sub-feature-item">
-      <div class="sub-feature-left">
-        <span class="sub-icon">Aa</span>
-        <div>
-          <div class="sub-name">OpenDyslexic Font</div>
-          <div class="sub-desc">Letters that cannot flip</div>
-        </div>
-      </div>
-      <div class="status-dot" id="dot-font"></div>
-    </div>
-
-    <div class="sub-feature-item">
-      <div class="sub-feature-left">
-        <span class="sub-icon">▓</span>
-        <div>
-          <div class="sub-name">Reading Progress Bar</div>
-          <div class="sub-desc">Shows how far through article</div>
-        </div>
-      </div>
-      <div class="status-dot" id="dot-progress"></div>
-    </div>
-
-    <div class="sub-feature-item">
-      <div class="sub-feature-left">
-        <span class="sub-icon">↔</span>
-        <div>
-          <div class="sub-name">Letter Spacing</div>
-          <div class="sub-desc">Stops words blurring together</div>
-        </div>
-      </div>
-      <div class="status-dot" id="dot-spacing"></div>
-    </div>
-
-    <div class="sub-feature-item">
-      <div class="sub-feature-left">
-        <span class="sub-icon">·</span>
-        <div>
-          <div class="sub-name">Syllable Markers</div>
-          <div class="sub-desc">Breaks long words into chunks</div>
-        </div>
-      </div>
-      <div class="status-dot" id="dot-syllable"></div>
-    </div>
-
-    <div class="sub-feature-item">
-      <div class="sub-feature-left">
-        <span class="sub-icon">¶</span>
-        <div>
-          <div class="sub-name">Paragraph Spacing</div>
-          <div class="sub-desc">Breathing room between blocks</div>
-        </div>
-      </div>
-      <div class="status-dot" id="dot-paragraph"></div>
-    </div>
-
   </div>
 
   <!-- FOOTER -->
