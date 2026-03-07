@@ -2,7 +2,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from backend.db.session import get_db
-from backend.db.user import User
+from backend.db.user import User, UserRole
 from backend.core.security import decode_access_token
 
 security_scheme = HTTPBearer()
@@ -33,3 +33,27 @@ def get_current_user(
             detail="User not found",
         )
     return user
+
+
+def get_current_admin_user(
+    current_user: User = Depends(get_current_user),
+) -> User:
+    if not current_user.role == UserRole.ADMIN:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin privileges required",
+        )
+    return current_user
+
+
+def get_current_subscripted_user(
+    current_user: User = Depends(get_current_user),
+) -> User:
+    if current_user.subscription_status != "premium":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Premium subscription required",
+        )
+    return current_user
+
+
