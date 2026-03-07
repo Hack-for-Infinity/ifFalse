@@ -46,48 +46,118 @@ Projects will be evaluated on:
 
 # 📁 Fill This In — Your Project README
 
-> ✏️ *Replace everything below this line with your own project details*
 
 ---
 
 ## 🏷️ Project Title
 
-*Your project name here*
+![NeuroRead Logo](./assets/logo.png)
+
+*NeuroRead*
 
 ## 👥 Team Members
 
 | Name | GitHub Username |
 |------|----------------|
-| ...  | ...             |
-| ...  | ...             |
+| Khalid Rashad  | Khaldosh249             |
+| Abdelaziz Elrasheed  | AbdelazizS             |
 
 ## ❓ Problem Statement
 
 *What problem are you solving? Who does it affect and why does it matter?*
 
+Many individuals, especially those with ADHD, struggle to read and comprehend information in a cluttered online environment. The abundance of distractions on the web can make it difficult for them to focus and extract key information from articles, research papers, and other online content. This can lead to frustration, decreased productivity, and missed opportunities for learning and growth.
+
 ## 🏗️ System Architecture / Design
 
-*Describe or diagram how your system is structured. What are the main components and how do they interact?*
+NeuroRead is a three-tier system: a **Chrome Extension** (client), a **FastAPI backend** (server), and a **PostgreSQL database** (persistence), all wired together with **Docker Compose**.
+
+```
+┌──────────────────────┐         ┌──────────────────────────────────┐
+│   Chrome Extension   │  HTTP   │        FastAPI Backend           │
+│  (JS / HTML / CSS)   │────────▶│                                  │
+│                      │  JWT    │  /auth      - register, login    │
+│  • Summarize button  │◀────────│  /summarize - create & list      │
+│  • Bionic Reading    │         │  /feedback  - rate summaries     │
+│  • Focus Mode        │         │  /settings  - user preferences   │
+│                      │         │  /subscription - manage plan     │
+└──────────────────────┘         │                                  │
+                                 │  ┌────────────┐ ┌─────────────┐ │
+                                 │  │ JWT Auth    │ │ Anthropic   │ │
+                                 │  │ (bcrypt +   │ │ Client      │─┼──▶ Claude API
+                                 │  │ python-jose)│ │ (summarize) │ │
+                                 │  └────────────┘ └─────────────┘ │
+                                 └──────────┬───────────────────────┘
+                                            │ SQLAlchemy ORM
+                                 ┌──────────▼───────────────────────┐
+                                 │        PostgreSQL Database        │
+                                 │  Users · Summaries · Feedback     │
+                                 │  Settings · (Alembic migrations)  │
+                                 └──────────────────────────────────┘
+```
+
+**Flow:** The Chrome Extension sends REST requests with a JWT Bearer token to the backend. For summarization, the backend fetches the target webpage, sends the content to the Anthropic API (Claude), stores the result in PostgreSQL, and returns it to the extension. All services run in Docker Compose (backend container + Postgres container).
+
+
+
 
 ## 🛠️ Technologies Used
 
 *List the languages, frameworks, libraries, APIs, tools, etc. you used.*
 
+- Backend: FastAPI, Python, SQLAlchemy, Alembic, PostgreSQL
+- Chrome Extension: JavaScript, HTML, CSS
+- APIs: Anthropic API for summarization
+- Authentication: JWT tokens
+- Deployment: Docker, Docker Compose
+
+
 ## ⭐ Key Features
 
 *What are the main features of your project?*
 
+- Summarization: Users can press the summarize button in the chrome extension to get a concise summary of the webpage content.
+- Bionic Reading: The extension will highlight key phrases and important information on the webpage to help users focus on the most relevant content.
+- Focus Mode: Users can enable a distraction-free mode that hides non-essential elements on the webpage, allowing them to concentrate on the main content.
+
 ## ⚙️ How It Works
 
 *Explain how your solution works, end to end. Walk through the main flow.*
+
+1. The user installs the chrome extension and logs in using their credentials.
+2. When the user visits a webpage, they can click the "Summarize" button in the extension.
+3. The extension sends the webpage URL to the backend API.
+4. The backend receives the URL, calls the Anthropic API to summarize the content, and returns the summary to the extension.
+5. The extension displays the summary to the user and highlights key phrases on the webpage.
+6. The user can also enable "Focus Mode" to hide distractions and focus on the main content of the webpage.
+7. The user can also enable "Bionic Reading" mode to enhance their reading experience.
 
 ## 🚀 How to Run
 
 *Step-by-step instructions for running your project locally.*
 
 ```bash
-# example
-git clone <repo-url>
-cd <project-folder>
-# add your setup/run commands here
+git clone https://github.com/Hack-for-Infinity/ifFalse
+cd ifFalse
+cp .env.example .env
+# Edit .env with your own values
+docker compose up -d
 ```
+Install the chrome extension by loading the `chrome-extension` folder as an unpacked extension in Chrome after editing the configuration files and replacing your domain.
+
+
+
+
+## 📸Screenshots / Demo
+
+Bionic Reading Mode off:
+![bionic-off](./assets/bionic-off.jpeg)
+Bionic Reading Mode on:
+![bionic-on](./assets/bionic-on.jpeg)
+
+
+Pop-up Extension:
+![popup](./assets/extension.jpeg)
+
+Summary Page:
+![summary](./assets/summary.jpeg)
