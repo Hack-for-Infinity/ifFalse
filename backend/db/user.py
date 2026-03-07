@@ -35,6 +35,6 @@ class User(Base):
 
     summaries = relationship("Summary", back_populates="user", cascade="all, delete-orphan")
     # feedbacks = relationship("Feedback", back_populates="user", cascade="all, delete-orphan")
-    # settings = relationship("Settings", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    settings = relationship("Settings", back_populates="user", uselist=False, cascade="all, delete-orphan")
 
     
