@@ -33,6 +33,9 @@ let scrollHandler = null;
 // Sub-Feature 5 — Letter Spacing: injected style element
 let spacingStyleEl = null;
 
+// Sub-Feature 7 — Paragraph Breathing: injected style element
+let paraStyleEl = null;
+
 
 
 // ============================================================
@@ -413,6 +416,47 @@ function removeLetterSpacing() {
 
 
 // ============================================================
+// SUB-FEATURE 7 — PARAGRAPH BREATHING SPACE
+// ============================================================
+// Problem: Dense paragraphs trigger visual overwhelm.
+// Solution: More margin between blocks so the page breathes.
+// ============================================================
+
+function applyParagraphSpacing() {
+  const style = document.createElement('style');
+  style.id = 'neuro-paragraph-style';
+  style.textContent = `
+    body.neuro-para-active p {
+      margin-bottom: 2em !important;
+      margin-top: 0.4em !important;
+    }
+    body.neuro-para-active h1,
+    body.neuro-para-active h2,
+    body.neuro-para-active h3,
+    body.neuro-para-active h4 {
+      margin-top: 1.4em !important;
+      margin-bottom: 0.6em !important;
+    }
+    body.neuro-para-active li {
+      margin-bottom: 0.6em !important;
+      line-height: 1.8 !important;
+    }
+  `;
+  document.head.appendChild(style);
+  paraStyleEl = style;
+  document.body.classList.add('neuro-para-active');
+}
+
+function removeParagraphSpacing() {
+  if (paraStyleEl?.parentNode) {
+    paraStyleEl.parentNode.removeChild(paraStyleEl);
+  }
+  paraStyleEl = null;
+  document.body.classList.remove('neuro-para-active');
+}
+
+
+// ============================================================
 // MESSAGE LISTENER
 // ============================================================
 // popup.js sends messages. We receive and execute.
@@ -426,6 +470,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       applyLineHighlighter();   // Sub-Feature 2
       applyProgressBar();       // Sub-Feature 4
       applyLetterSpacing();     // Sub-Feature 5
+      applyParagraphSpacing();  // Sub-Feature 7
       applyWordBolding();       // Sub-Feature 1 (includes Syllable Markers)
       bionicActive = true;
     } else {
@@ -433,6 +478,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       removeLineHighlighter();
       removeProgressBar();
       removeLetterSpacing();
+      removeParagraphSpacing();
       removeOpenDyslexicFont();
       bionicActive = false;
     }
